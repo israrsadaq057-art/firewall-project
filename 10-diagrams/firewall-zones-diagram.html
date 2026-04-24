@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firewall Zones Design – Enterprise Security Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e1a;
+            font-family: 'Segoe UI', Roboto, 'Open Sans', sans-serif;
+            padding: 2rem;
+            color: #eef2ff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #111827;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.5);
+            padding: 2rem;
+            border: 1px solid #1f2a3e;
+        }
+
+        /* Professional Introduction */
+        .intro-section {
+            background: linear-gradient(135deg, #1a2332, #0f1622);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 1px solid #ffa500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .intro-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffa500;
+            margin-bottom: 0.3rem;
+        }
+        .intro-title {
+            font-size: 0.9rem;
+            color: #8ba0bc;
+            margin-bottom: 0.8rem;
+        }
+        .intro-contact {
+            font-size: 0.8rem;
+            color: #b0c4de;
+            margin-bottom: 0.8rem;
+        }
+        .cert-badge {
+            display: inline-block;
+            background: #ffa50020;
+            border: 1px solid #ffa500;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            margin: 0.2rem;
+            color: #ffa500;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b6b, #ffa500, #4ade80);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subhead {
+            text-align: center;
+            color: #8ba0bc;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Trust Level Pyramid */
+        .trust-pyramid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+        .trust-level {
+            width: 100%;
+            text-align: center;
+            padding: 0.8rem;
+            margin: 0.1rem 0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .trust-level:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+        .level-high { background: #4ade80; color: #1a1a2e; width: 20%; margin: 0 auto; }
+        .level-medium { background: #3b82f6; color: white; width: 40%; margin: 0 auto; }
+        .level-low { background: #f59e0b; color: #1a1a2e; width: 60%; margin: 0 auto; }
+        .level-limited { background: #ef4444; color: white; width: 80%; margin: 0 auto; }
+        .level-untrusted { background: #6c8ea0; color: white; width: 100%; margin: 0 auto; }
+
+        /* Zones Grid */
+        .zones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .zone-card {
+            background: #0f1622;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            transition: all 0.2s;
+            border: 1px solid #1f2a3e;
+            cursor: pointer;
+        }
+        .zone-card:hover {
+            transform: translateY(-4px);
+            background: #131c2c;
+        }
+        .zone-card.wan { border-top: 4px solid #6c8ea0; }
+        .zone-card.dmz { border-top: 4px solid #ef4444; }
+        .zone-card.guest { border-top: 4px solid #f59e0b; }
+        .zone-card.academic { border-top: 4px solid #3b82f6; }
+        .zone-card.research { border-top: 4px solid #8b5cf6; }
+        .zone-card.lan { border-top: 4px solid #4ade80; }
+        .zone-card.management { border-top: 4px solid #00b4aa; }
+
+        .zone-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .zone-ip {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #ffa500;
+            margin-bottom: 0.5rem;
+        }
+        .zone-trust {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            margin-bottom: 0.8rem;
+        }
+        .trust-untrusted { background: #6c8ea0; }
+        .trust-limited { background: #ef4444; }
+        .trust-low { background: #f59e0b; color: #1a1a2e; }
+        .trust-medium { background: #8b5cf6; }
+        .trust-trusted { background: #4ade80; color: #1a1a2e; }
+        .trust-high { background: #00b4aa; color: #1a1a2e; }
+
+        .zone-desc {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #b0c4de;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Traffic Matrix Table */
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .matrix-table th, .matrix-table td {
+            border: 1px solid #1f2a3e;
+            padding: 0.6rem;
+            text-align: left;
+            cursor: pointer;
+        }
+        .matrix-table th {
+            background: #1a2332;
+            color: #ffa500;
+        }
+        .matrix-table tr:hover {
+            background: #131c2c;
+        }
+        .allow { color: #4ade80; }
+        .deny { color: #ef4444; }
+
+        /* NAT Table */
+        .nat-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .nat-table th, .nat-table td {
+            border: 1px solid #1f2a3e;
+            padding: 0.6rem;
+            text-align: left;
+        }
+        .nat-table th {
+            background: #1a2332;
+            color: #ffa500;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #1f2a3e;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #6c8ea0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #0f1622;
+            max-width: 650px;
+            width: 90%;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid #ffa500;
+        }
+        .modal-header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #ffa500;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+            color: #ffa500;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #8ba0bc;
+        }
+        .modal-close:hover { color: #ffa500; }
+        .command-block {
+            background: #0a0e1a;
+            color: #cde5f0;
+            padding: 0.8rem;
+            border-radius: 0.8rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            border-left: 3px solid #ffa500;
+        }
+        .why-box {
+            background: #1a2332;
+            border-left: 3px solid #4ade80;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            border-radius: 0.5rem;
+        }
+        .how-box {
+            background: #1a2332;
+            border-left: 3px solid #3b82f6;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Professional Introduction -->
+    <div class="intro-section">
+        <div class="intro-name">Israr Sadaq</div>
+        <div class="intro-title">Network Administrator | CCNA | CCNP (In Progress)</div>
+        <div class="intro-contact">
+            📧 israrsadaq057@gmail.com &nbsp;|&nbsp;
+            📱 +49 15215267799 &nbsp;|&nbsp;
+            🔗 github.com/israrsadaq057-art
+        </div>
+        <div class="intro-cert">
+            <span class="cert-badge">CCNA Certified</span>
+            <span class="cert-badge">CCNP (In Progress)</span>
+            <span class="cert-badge">Network Security</span>
+            <span class="cert-badge">Firewall Design</span>
+        </div>
+    </div>
+
+    <h1>🔥 Firewall Zones Design</h1>
+    <div class="subhead">Enterprise Security Architecture – Click any zone, rule, or cell for detailed explanation</div>
+
+    <!-- Trust Level Pyramid -->
+    <div class="trust-pyramid">
+        <div class="trust-level level-high" data-info="zone-management">🔐 Management Zone (Highest Trust)</div>
+        <div class="trust-level level-high" data-info="zone-lan">🟢 LAN Zone (Trusted)</div>
+        <div class="trust-level level-medium" data-info="zone-research">🔬 Research Zone (Medium Trust)</div>
+        <div class="trust-level level-low" data-info="zone-academic">📚 Academic Zone (Low Trust)</div>
+        <div class="trust-level level-limited" data-info="zone-dmz">🌐 DMZ Zone (Limited Trust)</div>
+        <div class="trust-level level-limited" data-info="zone-guest">🚪 Guest Zone (Isolated)</div>
+        <div class="trust-level level-untrusted" data-info="zone-wan">🌍 WAN Zone (Untrusted)</div>
+    </div>
+
+    <!-- Zones Grid -->
+    <div class="zones-grid">
+        <div class="zone-card wan" data-info="zone-wan">
+            <div class="zone-title">🌍 WAN Zone</div>
+            <div class="zone-ip">IP: DHCP / Static Public IP</div>
+            <div class="zone-trust trust-untrusted">Untrusted</div>
+            <div class="zone-desc">Internet connection. Zero trust. All traffic inspected and filtered.</div>
+        </div>
+        <div class="zone-card dmz" data-info="zone-dmz">
+            <div class="zone-title">🌐 DMZ Zone</div>
+            <div class="zone-ip">172.16.0.0/24</div>
+            <div class="zone-trust trust-limited">Limited Trust</div>
+            <div class="zone-desc">Public-facing servers (web, email, VPN). Accessible from internet but isolated from internal.</div>
+        </div>
+        <div class="zone-card guest" data-info="zone-guest">
+            <div class="zone-title">🚪 Guest Zone</div>
+            <div class="zone-ip">10.10.40.0/24</div>
+            <div class="zone-trust trust-limited">Isolated</div>
+            <div class="zone-desc">Visitor Wi-Fi. Internet only. No access to internal networks. Rate limited.</div>
+        </div>
+        <div class="zone-card academic" data-info="zone-academic">
+            <div class="zone-title">📚 Academic Zone</div>
+            <div class="zone-ip">10.10.10.0/24</div>
+            <div class="zone-trust trust-low">Low Trust</div>
+            <div class="zone-desc">Student computers, labs. Internet access only. Blocked from internal networks.</div>
+        </div>
+        <div class="zone-card research" data-info="zone-research">
+            <div class="zone-title">🔬 Research Zone</div>
+            <div class="zone-ip">10.10.30.0/24</div>
+            <div class="zone-trust trust-medium">Medium Trust</div>
+            <div class="zone-desc">Research labs. High bandwidth. Access to internet and DMZ servers (SSH/HTTPS).</div>
+        </div>
+        <div class="zone-card lan" data-info="zone-lan">
+            <div class="zone-title">🟢 LAN Zone</div>
+            <div class="zone-ip">10.10.20.0/24</div>
+            <div class="zone-trust trust-trusted">Trusted</div>
+            <div class="zone-desc">Staff computers, internal servers. Full access to all resources.</div>
+        </div>
+        <div class="zone-card management" data-info="zone-management">
+            <div class="zone-title">🔧 Management Zone</div>
+            <div class="zone-ip">10.10.1.0/24</div>
+            <div class="zone-trust trust-high">Highest Trust</div>
+            <div class="zone-desc">Firewall management, core switch, infrastructure. Only accessible from Admin VLAN.</div>
+        </div>
+    </div>
+
+    <!-- Traffic Matrix -->
+    <h2 style="margin-top: 2rem;">📋 Zone-to-Zone Traffic Matrix</h2>
+    <table class="matrix-table" id="traffic-matrix">
+        <thead>
+            <tr><th>Source Zone</th><th>Destination Zone</th><th>Action</th><th>Port/Protocol</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+            <tr data-info="rule-wan-dmz"><td>WAN</td><td>DMZ</td><td class="allow">ALLOW</td><td>TCP 80,443</td><td>Web access to public servers</td></tr>
+            <tr data-info="rule-wan-lan"><td>WAN</td><td>LAN</td><td class="deny">DENY</td><td>Any</td><td>No direct internet to internal</td></tr>
+            <tr data-info="rule-lan-any"><td>LAN</td><td>Any</td><td class="allow">ALLOW</td><td>Any</td><td>Staff full access</td></tr>
+            <tr data-info="rule-academic-wan"><td>Academic</td><td>WAN</td><td class="allow">ALLOW</td><td>Any</td><td>Student internet access</td></tr>
+            <tr data-info="rule-academic-lan"><td>Academic</td><td>LAN</td><td class="deny">DENY</td><td>Any</td><td>No student access to staff</td></tr>
+            <tr data-info="rule-research-wan"><td>Research</td><td>WAN</td><td class="allow">ALLOW</td><td>Any</td><td>Research internet access</td></tr>
+            <tr data-info="rule-research-dmz"><td>Research</td><td>DMZ</td><td class="allow">ALLOW</td><td>TCP 22,443</td><td>Access to lab servers</td></tr>
+            <tr data-info="rule-guest-wan"><td>Guest</td><td>WAN</td><td class="allow">ALLOW</td><td>Any</td><td>Guest internet access</td></tr>
+            <tr data-info="rule-guest-internal"><td>Guest</td><td>Any Internal</td><td class="deny">DENY</td><td>Any</td><td>No internal access</td></tr>
+            <tr data-info="rule-dmz-wan"><td>DMZ</td><td>WAN</td><td class="allow">ALLOW</td><td>Any</td><td>Updates from internet</td></tr>
+            <tr data-info="rule-dmz-internal"><td>DMZ</td><td>LAN/Internal</td><td class="deny">DENY</td><td>Any</td><td>No DMZ to internal</td></tr>
+        </tbody>
+    </table>
+
+    <!-- NAT Rules -->
+    <h2>🔄 NAT Rules (Public to Private Translation)</h2>
+    <table class="nat-table">
+        <thead><tr><th>Type</th><th>Public IP:Port</th><th>Private IP:Port</th><th>Zone</th><th>Service</th></tr></thead>
+        <tbody>
+            <tr><td>DNAT</td><td>203.0.113.1:80</td><td>172.16.0.10:80</td><td>DMZ</td><td>HTTP Web Server</td></tr>
+            <tr><td>DNAT</td><td>203.0.113.1:443</td><td>172.16.0.10:443</td><td>DMZ</td><td>HTTPS Web Server</td></tr>
+            <tr><td>DNAT</td><td>203.0.113.1:1194</td><td>172.16.0.30:1194</td><td>DMZ</td><td>OpenVPN</td></tr>
+            <tr><td>SNAT</td><td>203.0.113.1</td><td>10.10.0.0/16</td><td>All Internal</td><td>Internet Access</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div><span class="legend-color" style="background:#6c8ea0;"></span> Untrusted</div>
+        <div><span class="legend-color" style="background:#ef4444;"></span> Limited Trust</div>
+        <div><span class="legend-color" style="background:#f59e0b;"></span> Low Trust</div>
+        <div><span class="legend-color" style="background:#8b5cf6;"></span> Medium Trust</div>
+        <div><span class="legend-color" style="background:#4ade80;"></span> Trusted</div>
+        <div><span class="legend-color" style="background:#00b4aa;"></span> Highest Trust</div>
+    </div>
+
+    <footer>Israr Sadaq | Click any zone, pyramid level, or table row for detailed explanation</footer>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div id="modalHeader" class="modal-header"></div>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+    const zoneDetails = {
+        "zone-wan": {
+            title: "🌍 WAN Zone (Untrusted)",
+            body: `<div class="why-box"><strong>Why is it here?</strong><br>The WAN zone connects to the internet. It is completely untrusted – anyone can access it.</div>
+            <div class="how-box"><strong>Security Rules:</strong><br>• Default: DROP all incoming traffic<br>• Only allow established/related connections back in<br>• Specific ports (80,443) forwarded to DMZ</div>
+            <div class="command-block">iptables -P INPUT DROP<br>iptables -P FORWARD DROP<br>iptables -A FORWARD -i eth0 -o eth1.99 -p tcp --dport 80 -j ACCEPT</div>`
+        },
+        "zone-dmz": {
+            title: "🌐 DMZ Zone (Limited Trust)",
+            body: `<div class="why-box"><strong>Why is it here?</strong><br>Public servers (web, email, VPN) are placed here. Accessible from internet but isolated from internal network.</div>
+            <div class="how-box"><strong>Security Rules:</strong><br>• Allow HTTP/HTTPS from internet<br>• Allow DMZ to internet for updates<br>• BLOCK all DMZ to internal traffic</div>
+            <div class="command-block">iptables -A FORWARD -i eth0 -o eth1.99 -p tcp --dport 80 -j ACCEPT<br>iptables -A FORWARD -i eth1.99 -o eth1.20 -j DROP</div>`
+        },
+        "zone-guest": {
+            title: "🚪 Guest Zone (Isolated)",
+            body: `<div class="why-box"><strong>Why is it here?</strong><br>Visitors need internet access but must not access internal resources.</div>
+            <div class="how-box"><strong>Security Rules:</strong><br>• Allow internet only<br>• Rate limited to 10Mbps<br>• Block all internal network access</div>
+            <div class="command-block">iptables -A FORWARD -i eth1.40 -o eth0 -j ACCEPT<br>iptables -A FORWARD -i eth1.40 -o eth1.10 -j DROP</div>`
+        },
+        "zone-academic": {
+            title: "📚 Academic Zone (Low Trust)",
+            body: `<div class="why-box"><strong>Why is it here?</strong><br>Student computers. They need internet but should not access staff or research networks.</div>
+            <div class="how-box"><strong>Security Rules:</strong><br>• Allow internet access<br>• Block all internal VLANs (Admin, Research, DMZ)</div>
+            <div class="command-block">iptables -A FORWARD -i eth1.10 -o eth0 -j ACCEPT<br>iptables -A FORWARD -i eth1.10 -o eth1.20 -j DROP</div>`
+        },
+        "zone-research": {
+            title: "🔬 Research Zone (Medium Trust)",
+            body: `<div class="why-box"><strong>Why is it here?</strong><br>Research labs need high bandwidth and access to DMZ servers.</div>
+            <div class="how-box"><strong>Security Rules:</strong><br>• Allow internet access<br>• Allow SSH/HTTPS to DMZ<br>• Block access to Admin VLAN</div>
+            <div class="command-block">iptables -A FORWARD -i eth1.30 -o eth0 -j ACCEPT<br>iptables -A FORWARD -i eth1.30 -o eth1.99 -p tcp --dport 22 -j ACCEPT</div>`
+        },
+        "zone-lan": {
+            title: "🟢 LAN Zone (Trusted)",
+            body: `<div class="why-box"><strong>Why is it here?</strong><br>Staff computers and internal servers. Highest internal trust level.</div>
+            <div class="how-box"><strong>Security Rules:</strong><br>• Full access to all zones<br>• Can access management network</div>
+            <div class="command-block">iptables -A FORWARD -i eth1.20 -j ACCEPT</div>`
+        },
+        "zone-management": {
+            title: "🔧 Management Zone (Highest Trust)",
+            body: `<div class="why-box"><strong>Why is it here?</strong><br>Infrastructure devices (firewalls, switches). Only accessible from Admin VLAN.</div>
+            <div class="how-box"><strong>Security Rules:</strong><br>• Only accessible from Admin VLAN<br>• No access from user networks</div>
+            <div class="command-block">iptables -A INPUT -i eth1.20 -d 10.10.1.0/24 -j ACCEPT<br>iptables -A INPUT -d 10.10.1.0/24 -j DROP</div>`
+        }
+    };
+
+    const ruleDetails = {
+        "rule-wan-dmz": { title: "Rule: WAN → DMZ", body: `<div class="why-box">Allow HTTP/HTTPS from internet to web servers in DMZ.</div><div class="command-block">iptables -A FORWARD -i eth0 -o eth1.99 -p tcp --dport 80 -j ACCEPT</div>` },
+        "rule-wan-lan": { title: "Rule: WAN → LAN", body: `<div class="why-box">DENY all direct internet traffic to internal network.</div><div class="command-block">iptables -A FORWARD -i eth0 -o eth1.20 -j DROP</div>` },
+        "rule-lan-any": { title: "Rule: LAN → Any", body: `<div class="why-box">Staff have full access to all networks.</div><div class="command-block">iptables -A FORWARD -i eth1.20 -j ACCEPT</div>` },
+        "rule-academic-wan": { title: "Rule: Academic → WAN", body: `<div class="why-box">Students need internet access for learning.</div><div class="command-block">iptables -A FORWARD -i eth1.10 -o eth0 -j ACCEPT</div>` },
+        "rule-academic-lan": { title: "Rule: Academic → LAN", body: `<div class="why-box">Students cannot access staff network.</div><div class="command-block">iptables -A FORWARD -i eth1.10 -o eth1.20 -j DROP</div>` },
+        "rule-research-wan": { title: "Rule: Research → WAN", body: `<div class="why-box">Research needs internet access.</div><div class="command-block">iptables -A FORWARD -i eth1.30 -o eth0 -j ACCEPT</div>` },
+        "rule-research-dmz": { title: "Rule: Research → DMZ", body: `<div class="why-box">Researchers need SSH/HTTPS access to lab servers.</div><div class="command-block">iptables -A FORWARD -i eth1.30 -o eth1.99 -p tcp --dport 22 -j ACCEPT</div>` },
+        "rule-guest-wan": { title: "Rule: Guest → WAN", body: `<div class="why-box">Visitors need internet access.</div><div class="command-block">iptables -A FORWARD -i eth1.40 -o eth0 -j ACCEPT</div>` },
+        "rule-guest-internal": { title: "Rule: Guest → Internal", body: `<div class="why-box">Visitors cannot access internal networks.</div><div class="command-block">iptables -A FORWARD -i eth1.40 -o eth1.10 -j DROP</div>` },
+        "rule-dmz-wan": { title: "Rule: DMZ → WAN", body: `<div class="why-box">Servers need internet for updates.</div><div class="command-block">iptables -A FORWARD -i eth1.99 -o eth0 -j ACCEPT</div>` },
+        "rule-dmz-internal": { title: "Rule: DMZ → Internal", body: `<div class="why-box">CRITICAL: DMZ cannot initiate connections to internal network.</div><div class="command-block">iptables -A FORWARD -i eth1.99 -o eth1.20 -j DROP</div>` }
+    };
+
+    const modal = document.getElementById('modal');
+    const modalHeader = document.getElementById('modalHeader');
+    const modalBody = document.getElementById('modalBody');
+    const closeSpan = document.querySelector('.modal-close');
+
+    function showInfo(key) {
+        const info = zoneDetails[key] || ruleDetails[key];
+        if (info) {
+            modalHeader.innerHTML = info.title;
+            modalBody.innerHTML = info.body;
+            modal.style.display = 'flex';
+        }
+    }
+
+    document.querySelectorAll('[data-info]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showInfo(el.getAttribute('data-info'));
+        });
+    });
+
+    document.querySelectorAll('#traffic-matrix tr').forEach(row => {
+        row.addEventListener('click', () => {
+            const key = row.getAttribute('data-info');
+            if (key) showInfo(key);
+        });
+    });
+
+    closeSpan.onclick = () => modal.style.display = 'none';
+    window.onclick = (event) => {
+        if (event.target === modal) modal.style.display = 'none';
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Network Infrastructure – Israr Sadaq</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e1a;
+            font-family: 'Segoe UI', Roboto, 'Open Sans', sans-serif;
+            padding: 2rem;
+            color: #eef2ff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #111827;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.5);
+            padding: 2rem;
+            border: 1px solid #1f2a3e;
+        }
+
+        /* Professional Introduction Styles */
+        .intro-section {
+            background: linear-gradient(135deg, #1a2332, #0f1622);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 1px solid #ffa500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .intro-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffa500;
+            margin-bottom: 0.3rem;
+        }
+        .intro-title {
+            font-size: 0.9rem;
+            color: #8ba0bc;
+            margin-bottom: 0.8rem;
+        }
+        .intro-contact {
+            font-size: 0.8rem;
+            color: #b0c4de;
+            margin-bottom: 0.8rem;
+        }
+        .intro-icon {
+            margin-right: 0.2rem;
+        }
+        .cert-badge {
+            display: inline-block;
+            background: #ffa50020;
+            border: 1px solid #ffa500;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            margin: 0.2rem;
+            color: #ffa500;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00b4aa, #0066a1);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subhead {
+            text-align: center;
+            color: #8ba0bc;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Flow diagram */
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            background: #0f1622;
+            border-radius: 2rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #1f2a3e;
+        }
+
+        .flow-item {
+            background: #1a2332;
+            border-radius: 1rem;
+            padding: 0.7rem 1.2rem;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #2a3a50;
+            color: #eef2ff;
+        }
+
+        .flow-item:hover {
+            background: #2a3a50;
+            border-color: #ffa500;
+            transform: translateY(-2px);
+        }
+
+        .arrow-symbol {
+            font-size: 1.3rem;
+            color: #ffa500;
+        }
+
+        /* Components grid */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: #0f1622;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            transition: all 0.2s;
+            border: 1px solid #1f2a3e;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #ffa500;
+            background: #131c2c;
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-left: 4px solid #ffa500;
+            padding-left: 12px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-content {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #b0c4de;
+        }
+
+        .badge {
+            background: #ffa50010;
+            border-left: 2px solid #ffa500;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.5rem;
+            margin: 0.3rem 0;
+            font-size: 0.7rem;
+        }
+
+        /* VLAN Cards */
+        .vlan-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .vlan-card {
+            background: #0f1622;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            width: 170px;
+            text-align: center;
+            border: 1px solid #2a3a50;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .vlan-card:hover {
+            transform: translateY(-3px);
+            border-width: 2px;
+        }
+        .vlan-card.academic { border-top: 4px solid #4ade80; }
+        .vlan-card.admin { border-top: 4px solid #3b82f6; }
+        .vlan-card.research { border-top: 4px solid #8b5cf6; }
+        .vlan-card.guest { border-top: 4px solid #ef4444; }
+        .vlan-card.dmz { border-top: 4px solid #f59e0b; }
+
+        /* Server Cards */
+        .server-row {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .server {
+            background: #0a0e1a;
+            border-radius: 0.8rem;
+            padding: 0.5rem;
+            text-align: center;
+            width: 130px;
+            border: 1px solid #f59e0b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .server:hover {
+            background: #1a2332;
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            margin: 1.5rem 0 1rem 0;
+            border-left: 3px solid #ffa500;
+            padding-left: 12px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #1f2a3e;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #6c8ea0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #0f1622;
+            max-width: 650px;
+            width: 90%;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid #ffa500;
+        }
+
+        .modal-header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #ffa500;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+            color: #ffa500;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #8ba0bc;
+        }
+
+        .modal-close:hover { color: #ffa500; }
+
+        .command-block {
+            background: #0a0e1a;
+            color: #cde5f0;
+            padding: 0.8rem;
+            border-radius: 0.8rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            border-left: 3px solid #ffa500;
+            overflow-x: auto;
+        }
+
+        .why-box {
+            background: #1a2332;
+            border-left: 3px solid #4ade80;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            border-radius: 0.5rem;
+        }
+
+        .how-box {
+            background: #1a2332;
+            border-left: 3px solid #3b82f6;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Professional Introduction -->
+    <div class="intro-section">
+        <div class="intro-name">Israr Sadaq</div>
+        <div class="intro-title">Network Administrator | CCNA | CCNP (In Progress)</div>
+        <div class="intro-contact">
+            <span class="intro-icon">📧</span> israrsadaq057@gmail.com &nbsp;|&nbsp;
+            <span class="intro-icon">📱</span> +49 15215267799 &nbsp;|&nbsp;
+            <span class="intro-icon">🔗</span> github.com/israrsadaq057-art
+        </div>
+        <div class="intro-cert">
+            <span class="cert-badge">CCNA Certified</span>
+            <span class="cert-badge">CCNP (In Progress)</span>
+            <span class="cert-badge">Network Security</span>
+            <span class="cert-badge">Infrastructure Automation</span>
+        </div>
+    </div>
+
+    <h1>🏛️ Enterprise Network Infrastructure</h1>
+    <div class="subhead">Complete Network Design – Academic Institution | Click any component for detailed explanation</div>
+
+    <!-- Internet -->
+    <div class="internet" style="text-align:center; padding:1rem; background:#1a2332; border-radius:1rem; margin-bottom:1rem; border:2px solid #ffa500; cursor:pointer;" data-info="internet">
+        <strong>🌍 INTERNET</strong>
+    </div>
+
+    <!-- Firewall Cluster -->
+    <div class="firewall-row" style="display:flex; justify-content:center; gap:2rem; margin:1rem 0; flex-wrap:wrap;">
+        <div class="firewall-node" style="background:linear-gradient(135deg,#1a2332,#0f1622); border:1px solid #ffa500; border-radius:1rem; padding:1rem; text-align:center; width:220px; cursor:pointer;" data-info="firewall-master">
+            <strong>🔥 Firewall Master</strong><br>
+            10.10.1.2<br>
+            <span style="color:#4ade80;">Active</span>
+        </div>
+        <div class="firewall-node" style="background:linear-gradient(135deg,#1a2332,#0f1622); border:1px solid #ffa500; border-radius:1rem; padding:1rem; text-align:center; width:220px; cursor:pointer;" data-info="firewall-backup">
+            <strong>🔥 Firewall Backup</strong><br>
+            10.10.1.3<br>
+            <span style="color:#ffa500;">Standby (CARP)</span>
+        </div>
+    </div>
+
+    <!-- Virtual IP -->
+    <div class="virtual-ip" style="background:#0f1622; border:1px solid #ffa500; border-radius:1rem; padding:0.8rem; text-align:center; margin:1rem auto; width:300px; cursor:pointer;" data-info="virtual-ip">
+        <strong>📍 Virtual IP (CARP)</strong><br>
+        10.10.1.1<br>
+        Management Gateway
+    </div>
+
+    <!-- Core Switch -->
+    <div class="switch" style="background:#0f1622; border:1px solid #4ade80; border-radius:1rem; padding:0.8rem; text-align:center; margin:1rem auto; width:300px; cursor:pointer;" data-info="core-switch">
+        <strong>🔌 Core Switch (Layer 3)</strong><br>
+        10.10.1.5
+    </div>
+
+    <!-- VLANs -->
+    <div class="section-title">📡 VLANs (5 Network Segments)</div>
+    <div class="vlan-row">
+        <div class="vlan-card academic" data-info="vlan-academic">
+            <strong>📚 VLAN 10 – Academic</strong><br>
+            10.10.10.0/24<br>
+            Students (300 users)
+        </div>
+        <div class="vlan-card admin" data-info="vlan-admin">
+            <strong>👔 VLAN 20 – Administration</strong><br>
+            10.10.20.0/24<br>
+            Staff (50 users)
+        </div>
+        <div class="vlan-card research" data-info="vlan-research">
+            <strong>🔬 VLAN 30 – Research</strong><br>
+            10.10.30.0/24<br>
+            Labs (100 users)
+        </div>
+        <div class="vlan-card guest" data-info="vlan-guest">
+            <strong>🚪 VLAN 40 – Guest</strong><br>
+            10.10.40.0/24<br>
+            Visitors (50 users)
+        </div>
+        <div class="vlan-card dmz" data-info="vlan-dmz">
+            <strong>🌐 VLAN 99 – DMZ</strong><br>
+            172.16.0.0/24<br>
+            Public Servers
+        </div>
+    </div>
+
+    <!-- DMZ Servers -->
+    <div class="section-title">🖥️ DMZ Servers (Public-Facing)</div>
+    <div class="server-row">
+        <div class="server" data-info="web-server">
+            <strong>🌐 Web Server</strong><br>
+            172.16.0.10
+        </div>
+        <div class="server" data-info="email-server">
+            <strong>📧 Email Server</strong><br>
+            172.16.0.20
+        </div>
+        <div class="server" data-info="vpn-server">
+            <strong>🔐 OpenVPN Server</strong><br>
+            172.16.0.30
+        </div>
+    </div>
+
+    <!-- Internal Servers -->
+    <div class="section-title">🏢 Internal Servers (Admin VLAN)</div>
+    <div class="server-row">
+        <div class="server" data-info="dc-server">
+            <strong>🖥️ Domain Controller</strong><br>
+            10.10.20.10
+        </div>
+        <div class="server" data-info="file-server">
+            <strong>📁 File Server</strong><br>
+            10.10.20.20
+        </div>
+        <div class="server" data-info="monitoring-server">
+            <strong>📊 Monitoring</strong><br>
+            10.10.20.30
+        </div>
+        <div class="server" data-info="backup-server">
+            <strong>💾 Backup Server</strong><br>
+            10.10.20.40
+        </div>
+    </div>
+
+    <!-- Firewall Rules Summary -->
+    <div class="section-title">🛡️ Firewall Rules Summary</div>
+    <div class="vlan-row" style="flex-direction: column;">
+        <div class="vlan-card" style="width: auto;">
+            <strong>Academic (VLAN10):</strong> Internet only<br>
+            <strong>Admin (VLAN20):</strong> Full access to all networks<br>
+            <strong>Research (VLAN30):</strong> Internet + DMZ (SSH/HTTPS only)<br>
+            <strong>Guest (VLAN40):</strong> Internet only (rate limited to 10Mbps)<br>
+            <strong>DMZ (VLAN99):</strong> Internet for updates | No access to internal networks
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div><span class="legend-color" style="background:#4ade80;"></span> Academic VLAN</div>
+        <div><span class="legend-color" style="background:#3b82f6;"></span> Admin VLAN</div>
+        <div><span class="legend-color" style="background:#8b5cf6;"></span> Research VLAN</div>
+        <div><span class="legend-color" style="background:#ef4444;"></span> Guest VLAN</div>
+        <div><span class="legend-color" style="background:#f59e0b;"></span> DMZ VLAN</div>
+        <div><span class="legend-color" style="background:#ffa500;"></span> Firewall</div>
+    </div>
+
+    <footer>Israr Sadaq | Network Administrator | CCNA | CCNP (In Progress) | Click any component for detailed explanation</footer>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div id="modalHeader" class="modal-header"></div>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+    const details = {
+        "internet": {
+            title: "🌍 Internet",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>The internet provides external connectivity for students, staff, and public services.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Carries all traffic between your network and the outside world.</div>
+            <div class="command-block"><strong>🔧 How to test connectivity:</strong><br>ping 8.8.8.8<br>traceroute google.com<br>curl ifconfig.me</div>`
+        },
+        "firewall-master": {
+            title: "🔥 Firewall Master (Active)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>First line of defense. Controls ALL traffic entering and leaving the network.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Filters traffic based on rules, performs NAT, terminates VPNs, logs security events.</div>
+            <div class="command-block"><strong>🔧 How to check firewall status:</strong><br>iptables -L -v -n<br>pfctl -sr (pfSense)<br>systemctl status firewalld</div>`
+        },
+        "firewall-backup": {
+            title: "🔥 Firewall Backup (Standby)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Ensures continuous operation if master firewall fails.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Mirrors master configuration. Uses CARP/VRRP for automatic failover.</div>
+            <div class="command-block"><strong>🔧 How to check CARP status:</strong><br>ip addr show carp1<br>ifconfig carp1<br>tail -f /var/log/messages | grep CARP</div>`
+        },
+        "virtual-ip": {
+            title: "📍 Virtual IP (CARP)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Users need a single, consistent gateway IP. The virtual IP floats between firewalls.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Provides a single IP (10.10.1.1) that is always reachable.</div>
+            <div class="command-block"><strong>🔧 How to configure CARP (pfSense):</strong><br>Firewall → Virtual IPs → Add → Type: CARP<br>Address: 10.10.1.1/24<br>Password: securecarp123</div>`
+        },
+        "core-switch": {
+            title: "🔌 Core Switch (Layer 3)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Connects all VLANs and servers. Provides inter-VLAN routing.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Forwards traffic between VLANs. Connects access switches, servers, and firewall.</div>
+            <div class="command-block"><strong>🔧 How to configure core switch (Cisco):</strong><br>interface vlan 10<br>ip address 10.10.10.1 255.255.255.0<br>interface vlan 20<br>ip address 10.10.20.1 255.255.255.0<br>ip routing</div>`
+        },
+        "vlan-academic": {
+            title: "📚 VLAN 10 – Academic (Students)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Students need internet access but must NOT access admin or research networks.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Isolates student traffic. Only allows internet access. Blocks access to other VLANs.</div>
+            <div class="command-block"><strong>🔧 Firewall rules:</strong><br># Allow internet<br>iptables -A FORWARD -i eth1.10 -o eth0 -j ACCEPT<br># Block to Admin<br>iptables -A FORWARD -i eth1.10 -o eth1.20 -j DROP</div>`
+        },
+        "vlan-admin": {
+            title: "👔 VLAN 20 – Administration (Staff)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Staff need access to all internal resources for daily work.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Provides full access to all VLANs and the internet.</div>
+            <div class="command-block"><strong>🔧 Firewall rules:</strong><br># Full access for Admin<br>iptables -A FORWARD -i eth1.20 -j ACCEPT</div>`
+        },
+        "vlan-research": {
+            title: "🔬 VLAN 30 – Research (Labs)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Researchers need high bandwidth and access to lab servers in DMZ.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Provides internet access and SSH/HTTPS access to DMZ servers.</div>
+            <div class="command-block"><strong>🔧 Firewall rules:</strong><br># Internet access<br>iptables -A FORWARD -i eth1.30 -o eth0 -j ACCEPT<br># SSH/HTTPS to DMZ<br>iptables -A FORWARD -i eth1.30 -o eth1.99 -p tcp --dport 22 -j ACCEPT</div>`
+        },
+        "vlan-guest": {
+            title: "🚪 VLAN 40 – Guest (Visitors)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Visitors need internet access but must NOT access internal resources.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Provides internet only. No access to any internal VLAN.</div>
+            <div class="command-block"><strong>🔧 Firewall rules:</strong><br># Internet only<br>iptables -A FORWARD -i eth1.40 -o eth0 -j ACCEPT<br># Block internal<br>iptables -A FORWARD -i eth1.40 -o eth1.10 -j DROP</div>`
+        },
+        "vlan-dmz": {
+            title: "🌐 VLAN 99 – DMZ (Public Servers)",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Public servers must be accessible from internet but isolated from internal network.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Hosts public-facing servers. Can access internet for updates. Cannot access internal networks.</div>
+            <div class="command-block"><strong>🔧 Firewall rules:</strong><br># Allow web traffic from internet<br>iptables -A FORWARD -i eth0 -o eth1.99 -p tcp --dport 80 -j ACCEPT<br># Block DMZ to internal<br>iptables -A FORWARD -i eth1.99 -o eth1.10 -j DROP</div>`
+        },
+        "web-server": {
+            title: "🌐 Web Server",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Hosts the institution's public website. Accessible to everyone.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Serves web pages (HTTP/HTTPS). Contains information about the institution.</div>
+            <div class="command-block"><strong>🔧 How to test:</strong><br>curl http://172.16.0.10<br>curl https://172.16.0.10<br>ping 172.16.0.10</div>`
+        },
+        "email-server": {
+            title: "📧 Email Server",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Handles all email communication for the institution.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>SMTP for outgoing mail, IMAP/POP3 for incoming mail.</div>
+            <div class="command-block"><strong>🔧 How to test:</strong><br>telnet 172.16.0.20 25<br>openssl s_client -connect 172.16.0.20:993</div>`
+        },
+        "vpn-server": {
+            title: "🔐 OpenVPN Server",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Remote employees need secure access to internal resources from home.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Creates encrypted VPN tunnels for remote users.</div>
+            <div class="command-block"><strong>🔧 How to check VPN status:</strong><br>sudo systemctl status openvpn@server<br>sudo tail -f /var/log/openvpn.log</div>`
+        },
+        "dc-server": {
+            title: "🖥️ Domain Controller",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Manages user accounts, authentication, and security policies.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Active Directory, DNS, DHCP. Authenticates users when they log in.</div>
+            <div class="command-block"><strong>🔧 How to check:</strong><br>nslookup academic.local<br>Get-ADDomain<br>dcdiag</div>`
+        },
+        "file-server": {
+            title: "📁 File Server",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Central storage for all user files and department shares.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Provides network shares (SMB/CIFS).</div>
+            <div class="command-block"><strong>🔧 How to mount:</strong><br># Windows<br>net use Z: \\10.10.20.20\Shared<br># Linux<br>mount -t cifs //10.10.20.20/Shared /mnt/share</div>`
+        },
+        "monitoring-server": {
+            title: "📊 Monitoring Server",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Without monitoring, you don't know when something fails until users complain.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Runs Prometheus, Grafana, and alerting. Collects metrics from all devices.</div>
+            <div class="command-block"><strong>🔧 How to access dashboards:</strong><br>http://10.10.20.30:3000 (Grafana)<br>http://10.10.20.30:9090 (Prometheus)</div>`
+        },
+        "backup-server": {
+            title: "💾 Backup Server",
+            body: `<div class="why-box"><strong>❓ Why is it here?</strong><br>Data loss happens. Backups are the last line of defense.</div>
+            <div class="how-box"><strong>⚙️ What does it do?</strong><br>Daily backups of all servers. Stores backups locally and offsite.</div>
+            <div class="command-block"><strong>🔧 How to check backups:</strong><br>ls -la /backup/<br>cat /var/log/backup.log</div>`
+        }
+    };
+
+    const modal = document.getElementById('modal');
+    const modalHeader = document.getElementById('modalHeader');
+    const modalBody = document.getElementById('modalBody');
+    const closeSpan = document.querySelector('.modal-close');
+
+    function showInfo(key) {
+        const info = details[key];
+        if (info) {
+            modalHeader.innerHTML = info.title;
+            modalBody.innerHTML = info.body;
+            modal.style.display = 'flex';
+        } else {
+            modalHeader.innerHTML = "Network Component";
+            modalBody.innerHTML = "<p>Click on any component for detailed information.</p>";
+            modal.style.display = 'flex';
+        }
+    }
+
+    document.querySelectorAll('[data-info]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const key = el.getAttribute('data-info');
+            showInfo(key);
+        });
+    });
+
+    closeSpan.onclick = () => modal.style.display = 'none';
+    window.onclick = (event) => {
+        if (event.target === modal) modal.style.display = 'none';
+    };
+</script>
+</body>
+</html>
