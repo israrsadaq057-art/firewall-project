@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firewall Architecture</title>
+    <style>
+        body {
+            background: #0a0e1a;
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h1 { color: #ffa500; }
+        .zone {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .internet { background: #ef4444; }
+        .firewall { background: #ffa500; color: black; }
+        .dmz { background: #f59e0b; }
+        .lan { background: #4ade80; color: black; }
+        .guest { background: #3b82f6; }
+        .intro {
+            background: #1a2332;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .intro-name { font-size: 24px; color: #ffa500; }
+        .cert-badge {
+            display: inline-block;
+            background: #ffa50020;
+            border: 1px solid #ffa500;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="intro">
+        <div class="intro-name">Israr Sadaq</div>
+        <div>Network Administrator | CCNA | CCNP (In Progress)</div>
+        <div>📧 israrsadaq057@gmail.com | 📱 +49 15215267799</div>
+        <div>
+            <span class="cert-badge">CCNA Certified</span>
+            <span class="cert-badge">CCNP In Progress</span>
+            <span class="cert-badge">Network Security</span>
+        </div>
+    </div>
+
+    <h1>🔥 Firewall Architecture</h1>
+
+    <div class="zone internet">🌍 INTERNET (Untrusted)</div>
+    <div>⬇️</div>
+    <div class="zone firewall">🛡️ Firewall Cluster (CARP)</div>
+    <div>⬇️</div>
+
+    <div>
+        <div class="zone lan">🟢 LAN (Trusted)<br>10.10.20.0/24</div>
+        <div class="zone dmz">🟡 DMZ (Limited)<br>172.16.0.0/24</div>
+        <div class="zone guest">🔵 Guest (Isolated)<br>10.10.40.0/24</div>
+    </div>
+
+    <div style="margin-top: 30px; text-align: left;">
+        <h2>📋 Firewall Rules Summary</h2>
+        <ul>
+            <li>Academic (VLAN10) → Internet only</li>
+            <li>Admin (VLAN20) → Full access</li>
+            <li>Research (VLAN30) → Internet + DMZ (SSH/HTTPS)</li>
+            <li>Guest (VLAN40) → Internet only (rate limited)</li>
+            <li>DMZ (VLAN99) → No access to internal networks</li>
+        </ul>
+    </div>
+
+    <div style="margin-top: 30px; font-size: 12px; color: #888;">
+        <p>GitHub: github.com/israrsadaq057-art/firewall-project</p>
+    </div>
+</div>
+</body>
+</html>
