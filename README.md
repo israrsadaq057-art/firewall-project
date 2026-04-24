@@ -1,26 +1,26 @@
-\# Enterprise Firewall Project
+# Enterprise Firewall Project
 
 
 
-\## Author
+## Author
 
-\*\*Israr Sadaq\*\*
+*\*Israr Sadaq\*\*
 
-\- Network Administrator
+- Network and IT Administrator 
 
-\- CCNA Certified
+- CCNA Certified
 
-\- CCNP (In Progress)
+- CCNP Certified
 
 
 
-\## Project Overview
+## Project Overview
 
 Complete enterprise firewall solution for academic institution with 500+ users.
 
 
 
-\## Network Design
+## Network Design
 
 
 
@@ -40,23 +40,22 @@ Complete enterprise firewall solution for academic institution with 500+ users.
 
 
 
-\## Technologies Used
+## Technologies Used
 
-\- iptables / pfSense
+- iptables / pfSense
 
-\- VLANs
+- VLANs
 
-\- NAT (SNAT, DNAT)
+- NAT (SNAT, DNAT)
 
-\- OpenVPN
+- OpenVPN
 
-\- Snort IDS/IPS
+- Snort IDS/IPS
 
-\- CARP High Availability
+- CARP High Availability
 
-\- Prometheus + Grafana Monitoring
+- Prometheus + Grafana Monitoring
 
 
 
-&#x20;
 
